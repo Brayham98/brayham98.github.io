@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brayham Vargas Castillo · Data Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;500&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0c0f;
+    --surface: #111318;
+    --surface2: #181c22;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --accent: #4fffb0;
+    --accent2: #00cfff;
+    --amber: #f5a623;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 3rem;
+    background: rgba(10,12,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 6rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(79,255,176,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: 30%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,207,255,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-inner { max-width: 900px; }
+
+  .hero-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s forwards;
+  }
+
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(48px, 7vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -2px;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.2s forwards;
+  }
+
+  .hero-name span { color: var(--accent); }
+
+  .hero-desc {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.35s forwards;
+  }
+
+  .hero-metrics {
+    display: flex;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.5s forwards;
+  }
+
+  .metric { border-left: 2px solid var(--accent); padding-left: 1rem; }
+  .metric-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--text);
+  }
+  .metric-lbl { font-size: 12px; color: var(--muted); }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.6s forwards;
+  }
+
+  .btn-primary {
+    padding: 12px 28px;
+    background: var(--accent);
+    color: #0a0c0f;
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+
+  .btn-outline {
+    padding: 12px 28px;
+    background: transparent;
+    color: var(--text);
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--border2);
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* SECTIONS */
+  section { padding: 5rem 3rem; }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: -0.5px;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* IMPACT */
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .impact-card {
+    background: var(--surface);
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .impact-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+  .impact-card:hover::before { transform: scaleX(1); }
+  .impact-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 44px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .impact-label {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* EXPERIENCE */
+  .exp-list { display: flex; flex-direction: column; gap: 0; }
+  .exp-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+  }
+  .exp-item:last-child { border-bottom: 1px solid var(--border); }
+  .exp-meta {}
+  .exp-period {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 0.25rem;
+  }
+  .exp-company {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .exp-role {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 1rem;
+  }
+  .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .exp-bullets li {
+    font-size: 14px;
+    color: var(--muted);
+    padding-left: 1.25rem;
+    position: relative;
+  }
+  .exp-bullets li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 12px;
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+  }
+  .project-card {
+    background: var(--surface);
+    padding: 2rem;
+    transition: background 0.2s;
+    position: relative;
+  }
+  .project-card:hover { background: var(--surface2); }
+  .project-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 1rem;
+  }
+  .project-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+  .project-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+  .project-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-size: 10px;
+    padding: 3px 10px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    letter-spacing: 0.5px;
+  }
+
+  /* STACK */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--border);
+  }
+  .stack-item {
+    background: var(--surface);
+    padding: 1.25rem 1.5rem;
+    transition: background 0.2s;
+  }
+  .stack-item:hover { background: var(--surface2); }
+  .stack-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  .stack-level {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .stack-bar {
+    height: 2px;
+    background: var(--border2);
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stack-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0;
+    animation: fillBar 1s 0.5s forwards;
+  }
+
+  /* EDUCATION */
+  .edu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .edu-card {
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    position: relative;
+  }
+  .edu-degree {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .edu-inst { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+  .edu-period {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+  }
+  .edu-active {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    font-size: 10px;
+    background: rgba(79,255,176,0.1);
+    color: var(--accent);
+    padding: 2px 8px;
+    letter-spacing: 1px;
+  }
+
+  /* CONTACT */
+  .contact-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  .contact-headline {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 1.5rem;
+  }
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s;
+  }
+  .contact-link:hover { border-color: var(--accent); }
+  .contact-link-label { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .contact-link-value { font-size: 14px; margin-top: 2px; }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 3rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-logo {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+  }
+  .footer-copy { font-size: 12px; color: var(--muted); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fillBar {
+    to { width: var(--pct); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 5rem 1.5rem 3rem; }
+    .hero-metrics { flex-wrap: wrap; gap: 1.5rem; }
+    section { padding: 3rem 1.5rem; }
+    .impact-grid { grid-template-columns: 1fr; }
+    .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .edu-grid { grid-template-columns: 1fr; }
+    .contact-block { grid-template-columns: 1fr; gap: 2rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">BVC.dev</div>
+  <div class="nav-links">
+    <a href="#impacto">Impacto</a>
+    <a href="#experiencia">Experiencia</a>
+    <a href="#proyectos">Proyectos</a>
+    <a href="#stack">Stack</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-tag">// Data Engineer · Bogotá, Colombia</p>
+    <h1 class="hero-name">Brayham<br><span>Vargas</span><br>Castillo</h1>
+    <p class="hero-desc">Profesional en datos con +7 años diseñando pipelines de integración, procesos ETL y soluciones de calidad de datos en entornos ERP/CRM cloud e híbridos.</p>
+    <div class="hero-metrics">
+      <div class="metric">
+        <div class="metric-num">7+</div>
+        <div class="metric-lbl">Años de experiencia</div>
+      </div>
+      <div class="metric">
+        <div class="metric-num">$20K</div>
+        <div class="metric-lbl">USD ahorro generado</div>
+      </div>
+      <div class="metric">
+        <div class="metric-num">30%</div>
+        <div class="metric-lbl">Reducción infraestructura</div>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <a href="#contacto" class="btn-primary">Contactar</a>
+      <a href="#proyectos" class="btn-outline">Ver proyectos</a>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACTO -->
+<section id="impacto">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Impacto en datos</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="impact-grid">
+    <div class="impact-card">
+      <div class="impact-num">$20K</div>
+      <div class="impact-label">USD ahorrados mediante rediseño de arquitectura SAP B1 migrada a cloud en 2 años</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-num">30%</div>
+      <div class="impact-label">Reducción en costos de infraestructura tras migración cloud en Pear Solutions</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-num">1 SaaS</div>
+      <div class="impact-label">Nueva fuente de ingresos creada con datos — producto SaaS construido sobre integraciones</div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCIA -->
+<section id="experiencia">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Experiencia profesional</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="exp-list">
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-period">May 2023 – Presente</div>
+        <div class="exp-company">Pear Solutions S.A.S.</div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-role">Líder de Aplicaciones / Data Lead</div>
+        <ul class="exp-bullets">
+          <li>Diseñé y ejecuté pipelines de integración entre SAP B1, CRM y plataformas cloud en entornos híbridos.</li>
+          <li>Desarrollé procesos de limpieza y enriquecimiento de datos para consolidar fuentes heterogéneas del ERP.</li>
+          <li>Administré entornos de integración desde consola centralizada: agentes, logs y resolución de incidencias en tiempo real.</li>
+          <li>Rediseñé la arquitectura SAP B1 migrando a cloud — ahorro de USD $20K en 2 años (−30% en infraestructura).</li>
+          <li>Construí dashboards en Power BI transformando datos crudos del ERP en KPIs accionables para dirección.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-period">Sep 2021 – Abr 2023</div>
+        <div class="exp-company">Colliers International S.A.S.</div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-role">Analista IT / Data & Systems</div>
+        <ul class="exp-bullets">
+          <li>Gestioné conectores e integraciones entre CRM, CLM y sistemas on-premise para la regional Colombia.</li>
+          <li>Monitoreé y administré entornos cloud e híbridos, garantizando continuidad de datos críticos del negocio.</li>
+          <li>Ejecuté migración cloud de servicios corporativos con estrategias de respaldo, seguridad y recuperación de datos.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <div class="exp-period">Ene 2017 – Sep 2021</div>
+        <div class="exp-company">Medirex S.A.S.</div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-role">Auxiliar de Sistemas / Data Support</div>
+        <ul class="exp-bullets">
+          <li>Desarrollé consultas SQL avanzadas y reportes en Crystal Reports sobre SAP B1 y Salesforce CRM.</li>
+          <li>Gestioné bases de datos relacionales asegurando integridad, respaldo y recuperación de información crítica.</li>
+          <li>Optimicé almacenamiento documental en la nube mejorando tiempos de acceso y organización de activos.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROYECTOS -->
+<section id="proyectos">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Proyectos destacados</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div class="project-tag">Arquitectura Cloud · SAP</div>
+      <div class="project-title">Migración SAP B1 a Cloud</div>
+      <div class="project-desc">Rediseño completo de arquitectura de datos en SAP Business One, migrando de on-premise a cloud con ahorro de USD $20K y reducción del 30% en costos de infraestructura.</div>
+      <div class="project-chips">
+        <span class="chip">SAP B1</span><span class="chip">Cloud</span><span class="chip">ETL</span><span class="chip">Pipelines</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-tag">Integración · ERP/CRM</div>
+      <div class="project-title">Pipeline SAP B1 ↔ CRM Híbrido</div>
+      <div class="project-desc">Diseño y ejecución de pipelines de integración de datos entre SAP B1, CRM y plataformas cloud, gestionando conectores y flujos de sincronización en entornos híbridos.</div>
+      <div class="project-chips">
+        <span class="chip">Python</span><span class="chip">SQL</span><span class="chip">Salesforce</span><span class="chip">iPaaS</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-tag">Visualización · BI</div>
+      <div class="project-title">Dashboards ERP en Power BI</div>
+      <div class="project-desc">Construcción de dashboards ejecutivos en Power BI sobre datos integrados de múltiples fuentes ERP, transformando datos crudos en KPIs accionables para dirección.</div>
+      <div class="project-chips">
+        <span class="chip">Power BI</span><span class="chip">SQL</span><span class="chip">SAP B1</span><span class="chip">KPIs</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-tag">Big Data · Académico</div>
+      <div class="project-title">EDA Gapminder · Esp. Big Data</div>
+      <div class="project-desc">Análisis exploratorio de datos interactivo con visualizaciones Plotly Express sobre el dataset Gapminder, desarrollado en Jupyter Notebook para la especialización en UCompensar.</div>
+      <div class="project-chips">
+        <span class="chip">Python</span><span class="chip">Pandas</span><span class="chip">Plotly</span><span class="chip">Jupyter</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-tag">Calidad de Datos · CRM</div>
+      <div class="project-title">Integración Colliers · CRM/CLM</div>
+      <div class="project-desc">Gestión de conectores e integraciones entre CRM, CLM y sistemas on-premise para la regional Colombia de Colliers International, garantizando disponibilidad y calidad de flujo de datos.</div>
+      <div class="project-chips">
+        <span class="chip">CRM</span><span class="chip">CLM</span><span class="chip">On-premise</span><span class="chip">Monitoring</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-tag">Reportería · SQL</div>
+      <div class="project-title">Reportes SAP B1 en Crystal Reports</div>
+      <div class="project-desc">Desarrollo de consultas SQL avanzadas y reportes en Crystal Reports sobre SAP B1 y Salesforce CRM para soporte analítico a múltiples áreas del negocio en Medirex.</div>
+      <div class="project-chips">
+        <span class="chip">SQL Avanzado</span><span class="chip">Crystal Reports</span><span class="chip">SAP B1</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- STACK -->
+<section id="stack">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Stack tecnológico</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="stack-grid">
+    <div class="stack-item">
+      <div class="stack-name">SQL</div>
+      <div class="stack-level">Avanzado</div>
+      <div class="stack-bar"><div class="stack-fill" style="--pct:95%"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">Python</div>
+      <div class="stack-level">Intermedio</div>
+      <div class="stack-bar"><div class="stack-fill" style="--pct:70%"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">ETL / Pipelines</div>
+      <div class="stack-level">Avanzado</div>
+      <div class="stack-bar"><div class="stack-fill" style="--pct:90%"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">Power BI</div>
+      <div class="stack-level">Avanzado</div>
+      <div class="stack-bar"><div class="stack-fill" style="--pct:85%"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">SAP Business One</div>
+      <div class="stack-level">Avanzado</div>
+      <div class="stack-bar"><div class="stack-fill" style="--pct:90%"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">Salesforce CRM</div>
+      <div class="stack-level">Intermedio</div>
+      <div class="stack-bar"><div class="stack-fill" style="--pct:72%"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">Cloud / iPaaS</div>
+      <div class="stack-level">Intermedio · IICS en curso</div>
+      <div class="stack-bar"><div class="stack-fill" style="--pct:65%"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">NoSQL</div>
+      <div class="stack-level">Básico-Intermedio</div>
+      <div class="stack-bar"><div class="stack-fill" style="--pct:55%"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">Pandas / Plotly</div>
+      <div class="stack-level">Intermedio</div>
+      <div class="stack-bar"><div class="stack-fill" style="--pct:68%"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">Scrum / Agile</div>
+      <div class="stack-level">Certificado SCRUMstudy</div>
+      <div class="stack-bar"><div class="stack-fill" style="--pct:80%"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">Crystal Reports</div>
+      <div class="stack-level">Avanzado</div>
+      <div class="stack-bar"><div class="stack-fill" style="--pct:88%"></div></div>
+    </div>
+    <div class="stack-item">
+      <div class="stack-name">BPMN</div>
+      <div class="stack-level">Intermedio</div>
+      <div class="stack-bar"><div class="stack-fill" style="--pct:70%"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCACIÓN -->
+<section id="educacion">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Formación</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <span class="edu-active">En curso</span>
+      <div class="edu-degree">Especialización en Big Data</div>
+      <div class="edu-inst">Universidad Compensar</div>
+      <div class="edu-period">2025 – 2026</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-degree">Ingeniería de Sistemas</div>
+      <div class="edu-inst">Universidad Compensar</div>
+      <div class="edu-period">2021 – 2025</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-degree">Tecnólogo ADSI</div>
+      <div class="edu-inst">Universidad Compensar</div>
+      <div class="edu-period">Graduado 2024</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-degree">Técnico en Bases de Datos</div>
+      <div class="edu-inst">Universidad Compensar</div>
+      <div class="edu-period">Graduado 2023</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-degree">Bootcamp: Análisis y Visualización de Datos</div>
+      <div class="edu-inst">Talento Tech</div>
+      <div class="edu-period">Nov 2024 · Python & Power BI</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-degree">Fundamentos de Scrum</div>
+      <div class="edu-inst">SCRUMstudy · Cuarta Edición</div>
+      <div class="edu-period">Nov 2023</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Contacto</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="contact-block">
+    <div>
+      <h3 class="contact-headline">Hablemos<br>de <span style="color:var(--accent)">datos.</span></h3>
+      <p style="color:var(--muted);font-size:15px;line-height:1.8;">Disponible para proyectos de integración de datos, pipelines ETL, arquitecturas cloud e implementaciones BI. Bogotá, Colombia.</p>
+    </div>
+    <div class="contact-links">
+      <a class="contact-link" href="mailto:Brayamvargas75@gmail.com">
+        <div>
+          <div class="contact-link-label">Email</div>
+          <div class="contact-link-value">Brayamvargas75@gmail.com</div>
+        </div>
+      </a>
+      <a class="contact-link" href="tel:+573212814917">
+        <div>
+          <div class="contact-link-label">Teléfono</div>
+          <div class="contact-link-value">321 281 4917</div>
+        </div>
+      </a>
+      <a class="contact-link" href="https://linkedin.com" target="_blank">
+        <div>
+          <div class="contact-link-label">LinkedIn</div>
+          <div class="contact-link-value">linkedin.com/in/brayhamvargas</div>
+        </div>
+      </a>
+      <a class="contact-link" href="https://github.com" target="_blank">
+        <div>
+          <div class="contact-link-label">GitHub</div>
+          <div class="contact-link-value">github.com/brayhamvargas</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">BVC.dev · 2025</div>
+  <div class="footer-copy">Data Engineer · Bogotá, Colombia</div>
+</footer>
+
+</body>
+</html>
